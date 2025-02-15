@@ -5,7 +5,8 @@ const passport = require('passport');
 const session = require('express-session');
 const connectDB = require('./config/db');
 const portfolioRoutes = require('./routes/portfolioRoutes');
-require('./config/passport');  // Import the passport configuration
+require('./config/passport');  
+
 
 
 // Connect to MongoDB
@@ -13,7 +14,12 @@ connectDB();
 
 // Initialize Express
 const app = express();
-
+app.use(cors());
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp'); // Optional if using embedding
+  next();
+});
 // Session setup
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -39,8 +45,8 @@ app.get('/auth/google',
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    // Successful authentication, redirect to dashboard or home
-    res.redirect('/');
+    // Redirect to portfolio page after successful login
+    res.redirect('http://localhost:3000/portfolio');
   }
 );
 

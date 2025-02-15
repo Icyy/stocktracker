@@ -1,36 +1,17 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React from 'react';
+const API_BASE_URL = "http://localhost:5000";
+
 const Login = () => {
-  const navigate = useNavigate(); 
-
-  // Use Google API for login 
-  useEffect(() => {
-    window.google.accounts.id.initialize({
-      client_id: '1019204573638-idur8n8gm5bin1nsq7h7q7dpkae341jq.apps.googleusercontent.com', 
-      callback: handleCredentialResponse,
-    });
-    window.google.accounts.id.renderButton(
-      document.getElementById('google-signin-btn'),
-      { theme: 'outline', size: 'large' }
-    );
-  }, []);
-
-  const handleCredentialResponse = (response) => {
-    // Send the Google ID token to your backend for authentication
-    axios.post('/api/auth/google', { token: response.credential })
-      .then(response => {
-        console.log('Login successful:', response);
-        // Redirect to the portfolio page on successful login
-        navigate('/portfolio');
-      })
-      .catch(error => console.error('Error logging in:', error));
+  
+  const handleGoogleLogin = () => {
+    // Redirect user to the backend authentication route
+    window.location.href = `${API_BASE_URL}/auth/google`;
   };
 
   return (
     <div>
       <h2>Login with Google</h2>
-      <div id="google-signin-btn"></div>
+      <button onClick={handleGoogleLogin}>Sign in with Google</button>
     </div>
   );
 };
